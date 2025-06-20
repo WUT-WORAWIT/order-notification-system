@@ -36,7 +36,7 @@ func SetupRouter(r *gin.Engine, db *gorm.DB) {
 	}
 	// Order related public route
 	r.POST("/order", orderAPIHandler.CreateOrder)
-
+	r.GET("/products", orderAPIHandler.GetProducts)
 	// Protected routes
 	// Grouping protected routes under /api prefix and applying JWT middleware
 	protectedAPIRoutes := r.Group("/api")
@@ -47,6 +47,11 @@ func SetupRouter(r *gin.Engine, db *gorm.DB) {
 		protectedAPIRoutes.PUT("/users/:username", userHandler.UpdateUser)
 		protectedAPIRoutes.DELETE("/users/:username", userHandler.DeleteUser)
 		protectedAPIRoutes.GET("/profile", profileHandler.GetProfile)
+
+		// Product routes (protected)
+		// protectedAPIRoutes.GET("/products", orderAPIHandler.GetProducts)       // New route for getting all products
+		protectedAPIRoutes.POST("/getproduct", orderAPIHandler.GetProduct)     // Existing route, kept for consistency if needed, but GET /products/:id is more RESTful
+		protectedAPIRoutes.POST("/editproduct", orderAPIHandler.CreateProduct) // Existing route, consider changing to POST /products for creation
 	}
 
 	// WebSocket and Order Status routes (protected)
